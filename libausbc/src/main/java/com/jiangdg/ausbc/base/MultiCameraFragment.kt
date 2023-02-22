@@ -26,7 +26,7 @@ import com.jiangdg.usb.USBMonitor
  * @author Created by jiangdg on 2022/7/20
  *      Modified for v3.3.0 by jiangdg on 2023/1/15
  */
-abstract class MultiCameraFragment: BaseFragment() {
+abstract class MultiCameraFragment : BaseFragment() {
     private var mCameraClient: MultiCameraClient? = null
     private val mCameraMap = hashMapOf<Int, MultiCameraClient.ICamera>()
 
@@ -151,7 +151,7 @@ abstract class MultiCameraFragment: BaseFragment() {
 
     /**
      * If you want to open the specified camera,you need to let isAutoRequestPermission() false.
-    *  And then you need to call requestPermission(device) in your own Fragment
+     *  And then you need to call requestPermission(device) in your own Fragment
      * when onAttachDev() called, default is true.
      */
     protected fun isAutoRequestPermission() = true

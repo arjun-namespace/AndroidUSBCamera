@@ -25,7 +25,7 @@ import com.jiangdg.usb.USBMonitor
  *
  * @author Created by jiangdg on 2022/7/20
  */
-abstract class MultiCameraActivity: BaseActivity() {
+abstract class MultiCameraActivity : BaseActivity() {
     private var mCameraClient: MultiCameraClient? = null
     private val mCameraMap = hashMapOf<Int, MultiCameraClient.ICamera>()
 

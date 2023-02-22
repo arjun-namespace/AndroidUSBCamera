@@ -22,7 +22,7 @@ import com.jiangdg.ausbc.R
  *
  * @author Created by jiangdg on 2022/7/23
  */
-abstract class BaseBottomDialog: BottomSheetDialogFragment()  {
+abstract class BaseBottomDialog : BottomSheetDialogFragment() {
     private var mDismissListener: OnDismissListener? = null
     private var mTopOffset: Int = 0
     private var mBehavior: BottomSheetBehavior<FrameLayout>? = null

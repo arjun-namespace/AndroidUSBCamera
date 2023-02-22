@@ -71,7 +71,7 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
                 registerMultiCamera()
                 return
             }
-        }?.also { view->
+        }?.also { view ->
             getCameraViewContainer()?.apply {
                 removeAllViews()
                 addView(view, getViewLayoutParams(this))
@@ -139,11 +139,17 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
                     mCurrentCamera = SettableFuture()
                     mCurrentCamera?.set(camera)
                     openCamera(mCameraView)
-                    Logger.i(TAG, "camera connection. pid: ${device.productId}, vid: ${device.vendorId}")
+                    Logger.i(
+                        TAG,
+                        "camera connection. pid: ${device.productId}, vid: ${device.vendorId}"
+                    )
                 }
             }
 
-            override fun onDisConnectDec(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
+            override fun onDisConnectDec(
+                device: UsbDevice?,
+                ctrlBlock: USBMonitor.UsbControlBlock?
+            ) {
                 closeCamera()
                 mRequestPermission.set(false)
             }
@@ -254,7 +260,15 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
      * @return Inheritor assignment camera api policy
      */
     protected open fun generateCamera(ctx: Context, device: UsbDevice): MultiCameraClient.ICamera {
-        return CameraUVC(ctx, device)
+        return CameraUVC(ctx, device, object : IDeviceStatusCallBack {
+            override fun onConnectDev(device: UsbDevice?) {
+                println("Device Connected")
+            }
+
+            override fun onDisConnectDev(device: UsbDevice?) {
+                println("Device Disconnected")
+            }
+        })
     }
 
     /**
@@ -300,7 +314,7 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
      *
      * @return camera open status
      */
-    protected fun isCameraOpened() = getCurrentCamera()?.isCameraOpened()  ?: false
+    protected fun isCameraOpened() = getCurrentCamera()?.isCameraOpened() ?: false
 
     /**
      * Update resolution
@@ -318,7 +332,8 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
      * @param aspectRatio preview size aspect ratio,
      *                      null means getting all preview sizes
      */
-    protected fun getAllPreviewSizes(aspectRatio: Double? = null) = getCurrentCamera()?.getAllPreviewSizes(aspectRatio)
+    protected fun getAllPreviewSizes(aspectRatio: Double? = null) =
+        getCurrentCamera()?.getAllPreviewSizes(aspectRatio)
 
     /**
      * Add render effect
@@ -396,7 +411,11 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
      * @param path custom save path
      * @param durationInSec divided record duration time in seconds
      */
-    protected fun captureVideoStart(callBack: ICaptureCallBack, path: String ?= null, durationInSec: Long = 0L) {
+    protected fun captureVideoStart(
+        callBack: ICaptureCallBack,
+        path: String? = null,
+        durationInSec: Long = 0L
+    ) {
         getCurrentCamera()?.captureVideoStart(callBack, path, durationInSec)
     }
 
@@ -413,7 +432,7 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
      * @param callBack capture status, see [ICaptureCallBack]
      * @param path custom save path
      */
-    protected fun captureAudioStart(callBack: ICaptureCallBack, path: String ?= null) {
+    protected fun captureAudioStart(callBack: ICaptureCallBack, path: String? = null) {
         getCurrentCamera()?.captureAudioStart(callBack, path)
     }
 
@@ -517,7 +536,6 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
             camera.resetAutoFocus()
         }
     }
-
 
 
     /**
@@ -863,7 +881,7 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
     }
 
     private fun getViewLayoutParams(viewGroup: ViewGroup): ViewGroup.LayoutParams {
-        return when(viewGroup) {
+        return when (viewGroup) {
             is FrameLayout -> {
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
@@ -883,8 +901,8 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
                 RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT
-                ).apply{
-                    when(getGravity()) {
+                ).apply {
+                    when (getGravity()) {
                         Gravity.TOP -> {
                             addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
                         }
@@ -898,8 +916,10 @@ abstract class CameraFragment : BaseFragment(), ICameraStateCallBack {
                     }
                 }
             }
-            else -> throw IllegalArgumentException("Unsupported container view, " +
-                    "you can use FrameLayout or LinearLayout or RelativeLayout")
+            else -> throw IllegalArgumentException(
+                "Unsupported container view, " +
+                        "you can use FrameLayout or LinearLayout or RelativeLayout"
+            )
         }
     }
 

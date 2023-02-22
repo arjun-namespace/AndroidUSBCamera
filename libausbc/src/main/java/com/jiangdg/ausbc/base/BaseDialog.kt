@@ -22,9 +22,9 @@ import android.util.DisplayMetrics
 import com.jiangdg.ausbc.R
 
 abstract class BaseDialog(
-        activity: Activity,
-        portraitWidthRatio: Float = 0.67F,
-        landscapeWidthRatio: Float = 0.5F
+    activity: Activity,
+    portraitWidthRatio: Float = 0.67F,
+    landscapeWidthRatio: Float = 0.5F
 ) : DialogInterface {
     private val mContext: Activity = activity
     protected val mDialog: Dialog = Dialog(mContext, R.style.CommonDialogStyle)
@@ -39,7 +39,8 @@ abstract class BaseDialog(
             it.windowManager?.defaultDisplay?.run {
                 getMetrics(dm)
                 val lp = it.attributes
-                lp.width = (dm.widthPixels * if (isLandscape) landscapeWidthRatio else portraitWidthRatio).toInt()
+                lp.width =
+                    (dm.widthPixels * if (isLandscape) landscapeWidthRatio else portraitWidthRatio).toInt()
                 it.attributes = lp
             }
         }

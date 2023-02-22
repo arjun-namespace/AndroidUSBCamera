@@ -22,6 +22,7 @@ import android.os.Build
 import android.provider.MediaStore
 import com.jiangdg.ausbc.R
 import com.jiangdg.ausbc.callback.IDeviceConnectCallBack
+import com.jiangdg.ausbc.callback.IDeviceStatusCallBack
 import com.jiangdg.ausbc.callback.IPreviewDataCallBack
 import com.jiangdg.ausbc.camera.bean.CameraStatus
 import com.jiangdg.ausbc.camera.bean.CameraUvcInfo
@@ -47,7 +48,7 @@ import kotlin.Exception
  * I recommend using the [CameraUVC] API for your application.
  */
 @kotlin.Deprecated("Deprecated since version 3.3.0")
-class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
+class CameraUvcStrategy(ctx: Context,var callback: IDeviceStatusCallBack) : ICameraStrategy(ctx) {
     private var mDevSettableFuture: SettableFuture<UsbDevice?>? = null
     private var mCtrlBlockSettableFuture: SettableFuture<USBMonitor.UsbControlBlock?>? = null
     private val mConnectSettableFuture: SettableFuture<Boolean> = SettableFuture()
@@ -460,6 +461,7 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
                 mDevSettableFuture?.set(device)
                 mCtrlBlockSettableFuture?.set(ctrlBlock)
                 mConnectSettableFuture.set(true)
+                callback.onConnectDev(device)
             }
 
             /**
@@ -481,6 +483,7 @@ class CameraUvcStrategy(ctx: Context) : ICameraStrategy(ctx) {
                 stopPreview()
                 mDevConnectCallBack?.onDisConnectDec(device, ctrlBlock)
                 mConnectSettableFuture.set(false)
+                callback.onDisConnectDev(device)
             }
 
             /**

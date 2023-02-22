@@ -26,7 +26,7 @@ import com.jiangdg.ausbc.utils.ActivityStackUtils
  *
  * @author Created by jiangdg on 2022/1/28
  */
-abstract class BaseActivity: AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

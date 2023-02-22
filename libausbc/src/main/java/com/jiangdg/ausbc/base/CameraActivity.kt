@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @author Created by jiangdg on 2023/2/3
  */
-abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
+abstract class CameraActivity : BaseActivity(), ICameraStateCallBack {
     private var mCameraView: IAspectRatio? = null
     private var mCameraClient: MultiCameraClient? = null
     private val mCameraMap = hashMapOf<Int, MultiCameraClient.ICamera>()
@@ -73,7 +73,7 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
                 registerMultiCamera()
                 return
             }
-        }.also { view->
+        }.also { view ->
             getCameraViewContainer()?.apply {
                 removeAllViews()
                 addView(view, getViewLayoutParams(this))
@@ -127,11 +127,17 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
                     mCurrentCamera = SettableFuture()
                     mCurrentCamera?.set(camera)
                     openCamera(mCameraView)
-                    Logger.i(TAG, "camera connection. pid: ${device.productId}, vid: ${device.vendorId}")
+                    Logger.i(
+                        TAG,
+                        "camera connection. pid: ${device.productId}, vid: ${device.vendorId}"
+                    )
                 }
             }
 
-            override fun onDisConnectDec(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
+            override fun onDisConnectDec(
+                device: UsbDevice?,
+                ctrlBlock: USBMonitor.UsbControlBlock?
+            ) {
                 closeCamera()
                 mRequestPermission.set(false)
                 mCurrentCamera = null
@@ -238,7 +244,15 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
      * @return Inheritor assignment camera api policy
      */
     protected open fun generateCamera(ctx: Context, device: UsbDevice): MultiCameraClient.ICamera {
-        return CameraUVC(ctx, device)
+        return CameraUVC(ctx, device, object : IDeviceStatusCallBack {
+            override fun onConnectDev(device: UsbDevice?) {
+                println("Device Connected")
+            }
+
+            override fun onDisConnectDev(device: UsbDevice?) {
+                println("Device Disconnected")
+            }
+        })
     }
 
     /**
@@ -283,7 +297,7 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
      *
      * @return camera open status
      */
-    protected fun isCameraOpened() = getCurrentCamera()?.isCameraOpened()  ?: false
+    protected fun isCameraOpened() = getCurrentCamera()?.isCameraOpened() ?: false
 
     /**
      * Update resolution
@@ -301,7 +315,8 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
      * @param aspectRatio preview size aspect ratio,
      *                      null means getting all preview sizes
      */
-    protected fun getAllPreviewSizes(aspectRatio: Double? = null) = getCurrentCamera()?.getAllPreviewSizes(aspectRatio)
+    protected fun getAllPreviewSizes(aspectRatio: Double? = null) =
+        getCurrentCamera()?.getAllPreviewSizes(aspectRatio)
 
     /**
      * Add render effect
@@ -379,7 +394,11 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
      * @param path custom save path
      * @param durationInSec divided record duration time in seconds
      */
-    protected fun captureVideoStart(callBack: ICaptureCallBack, path: String ?= null, durationInSec: Long = 0L) {
+    protected fun captureVideoStart(
+        callBack: ICaptureCallBack,
+        path: String? = null,
+        durationInSec: Long = 0L
+    ) {
         getCurrentCamera()?.captureVideoStart(callBack, path, durationInSec)
     }
 
@@ -396,7 +415,7 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
      * @param callBack capture status, see [ICaptureCallBack]
      * @param path custom save path
      */
-    protected fun captureAudioStart(callBack: ICaptureCallBack, path: String ?= null) {
+    protected fun captureAudioStart(callBack: ICaptureCallBack, path: String? = null) {
         getCurrentCamera()?.captureAudioStart(callBack, path)
     }
 
@@ -500,7 +519,6 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
             camera.resetAutoFocus()
         }
     }
-
 
 
     /**
@@ -847,7 +865,7 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
     }
 
     private fun getViewLayoutParams(viewGroup: ViewGroup): ViewGroup.LayoutParams {
-        return when(viewGroup) {
+        return when (viewGroup) {
             is FrameLayout -> {
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
@@ -867,8 +885,8 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
                 RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT
-                ).apply{
-                    when(getGravity()) {
+                ).apply {
+                    when (getGravity()) {
                         Gravity.TOP -> {
                             addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
                         }
@@ -882,8 +900,10 @@ abstract class CameraActivity: BaseActivity(), ICameraStateCallBack {
                     }
                 }
             }
-            else -> throw IllegalArgumentException("Unsupported container view, " +
-                    "you can use FrameLayout or LinearLayout or RelativeLayout")
+            else -> throw IllegalArgumentException(
+                "Unsupported container view, " +
+                        "you can use FrameLayout or LinearLayout or RelativeLayout"
+            )
         }
     }
 

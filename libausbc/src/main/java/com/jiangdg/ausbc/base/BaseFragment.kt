@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
  *
  * @author Created by jiangdg on 2022/1/21
  */
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment : Fragment() {
 
     private var mRootView: View? = null
 

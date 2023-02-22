@@ -24,7 +24,7 @@ import com.jiangdg.ausbc.utils.ToastUtils
  *
  * @author Created by jiangdg on 2022/2/28
  */
-open class BaseApplication: Application() {
+open class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
