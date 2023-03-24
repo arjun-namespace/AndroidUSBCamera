@@ -13,6 +13,7 @@ import com.jiangdg.ausbc.MultiCameraClient
 import com.jiangdg.ausbc.base.MultiCameraFragment
 import com.jiangdg.ausbc.callback.ICameraStateCallBack
 import com.jiangdg.ausbc.callback.ICaptureCallBack
+import com.jiangdg.ausbc.callback.IDeviceStatusCallBack
 import com.jiangdg.ausbc.camera.CameraUVC
 import com.jiangdg.ausbc.camera.bean.CameraRequest
 import com.jiangdg.ausbc.utils.ToastUtils
@@ -22,7 +23,7 @@ import com.jiangdg.demo.databinding.FragmentMultiCameraBinding
  *
  * @author Created by jiangdg on 2022/7/20
  */
-class DemoMultiCameraFragment : MultiCameraFragment(), ICameraStateCallBack {
+class DemoMultiCameraFragment : MultiCameraFragment(), ICameraStateCallBack, IDeviceStatusCallBack {
     private lateinit var mAdapter: CameraAdapter
     private lateinit var mViewBinding: FragmentMultiCameraBinding
     private val mCameraList by lazy {
@@ -54,7 +55,7 @@ class DemoMultiCameraFragment : MultiCameraFragment(), ICameraStateCallBack {
     }
 
     override fun generateCamera(ctx: Context, device: UsbDevice): MultiCameraClient.ICamera {
-        return CameraUVC(ctx, device)
+        return CameraUVC(ctx, device, this)
     }
 
     override fun onCameraConnected(camera: MultiCameraClient.ICamera) {
@@ -196,5 +197,13 @@ class DemoMultiCameraFragment : MultiCameraFragment(), ICameraStateCallBack {
                 }
             }
         }
+    }
+
+    override fun onConnectDev(device: UsbDevice?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDisConnectDev(device: UsbDevice?) {
+        TODO("Not yet implemented")
     }
 }

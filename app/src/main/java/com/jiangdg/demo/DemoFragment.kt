@@ -164,14 +164,14 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
 
     override fun initData() {
         super.initData()
-        EventBus.with<Int>(BusKey.KEY_FRAME_RATE).observe(this, {
+        EventBus.with<Int>(BusKey.KEY_FRAME_RATE).observe(this) {
             mViewBinding.frameRateTv.text = "frame rate:  $it fps"
-        })
+        }
 
-        EventBus.with<Boolean>(BusKey.KEY_RENDER_READY).observe(this, { ready ->
-            if (! ready) return@observe
+        EventBus.with<Boolean>(BusKey.KEY_RENDER_READY).observe(this) { ready ->
+            if (!ready) return@observe
             getDefaultEffect()?.apply {
-                when(getClassifyId()) {
+                when (getClassifyId()) {
                     CameraEffect.CLASSIFY_ID_FILTER -> {
                         // check if need to set anim
                         val animId = MMKVUtils.getInt(KEY_ANIMATION, -99)
@@ -229,7 +229,7 @@ class DemoFragment : CameraFragment(), View.OnClickListener, CaptureMediaView.On
                     else -> throw IllegalStateException("Unsupported classify")
                 }
             }
-        })
+        }
     }
 
     override fun onCameraState(

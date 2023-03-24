@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 //        replaceDemoFragment(DemoMultiCameraFragment())
-        replaceDemoFragment(DemoFragment())
+        replaceDemoFragment(NewCameraFragment())
+//        replaceDemoFragment(DemoFragment())
 //        replaceDemoFragment(GlSurfaceFragment())
     }
 
